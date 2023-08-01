@@ -1,11 +1,16 @@
-
-
-
 * {
     margin: 0;
     padding:0;
     box-sizing: content-box;
 }
+
+h1 {
+    font-size: 3rem;
+    font-weight: normal;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: red;
+}
+
 
 
 #test-item-desc {
@@ -21,12 +26,10 @@
     padding:0.5rem;
 }
 
-#page-title {
-    font-size: 3rem;
-}
+
 
 .flex-hor {
-    display:inline-flex;
+    /* display:inline-flex; */
     gap:1rem;
     flex-direction: row;
     
@@ -42,12 +45,11 @@
 /* Components */
 
 header {
-    margin: 0rem 1rem 0.5rem 1rem;
     padding:0rem 0rem 1rem 0rem;
     background-color: lightblue;
-    width:100%;
     border-color:black;
     border-style:solid;
+    text-align: center;
 }
 
 button {
