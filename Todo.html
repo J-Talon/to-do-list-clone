@@ -12,7 +12,8 @@
 
     <header>
         <h1>Todo list</h1>
-        
+
+    <div class="flex-vert">
         <div class="flex-hor" id="nav-button-container">
             <button id="deleted-items">Deleted</button>
             <button id="done-items">Done</button>
@@ -23,17 +24,22 @@
             <input placeholder="Enter task and description">
             <button>Create Task</button>
         </div>
+    </div>
+
 
     </header>
  
     <!-- This is the container for the test item -->
-    <div class="flex-hor">
+    <div class="flex-vert">
+        <div class="flex-hor">
         <div id="test-item-desc">
             <p>Task description goes here</p>
         </div>
-        <div class="flex-vert">
+
+        <div>
             <button id="done-button">Done</button>
             <button id="delete-button">Delete</button>
+        </div>
         </div>
     </div>
 
