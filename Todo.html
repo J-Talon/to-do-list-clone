@@ -10,7 +10,6 @@
 </head>
 
 <body >
-    <!-- <script src="app.js"></script> -->
     <script src="script.js"></script>
 
     <header>
@@ -18,9 +17,9 @@
 
         <div class="flex-vert">
             <div class="flex-hor" id="nav-button-container">
-                <button id="deleted-items">Deleted</button>
-                <button id="done-items">Done</button>
-                <button id="todo-items">Todo</button>
+                <a href="" id="deleted-items"><button>Deleted</button></a>
+                <a id="done-items"><button>Done</button></a>
+                <a id="todo-items"><button>Todo</button></a>
             </div>
         
             <div class="flex-hor">
@@ -31,9 +30,13 @@
 
     </header>
  
-    <h2>Tasks</h2>
+    
     <!-- This is the container for the test item -->
-    <div id="list-container" class="flex-vert scrollable">
+    <div style="background-color: lightgreen;">
+        <h2>Tasks</h2>
+        <div id="list-container" class="flex-vert scrollable"></div>
+    </div>
+    
         
     </div>
 

@@ -4,6 +4,9 @@
     box-sizing: border-box;
 }
 
+body, html {
+    height: 100%;
+}
 
 h1, h2 {    
     font-weight: normal;
@@ -23,16 +26,21 @@ h2 {
 }
 
 .scrollable, .history-scrollable {
-    height: 50vh;
-    /* background-color: lightgray; */
     overflow: hidden auto;
     padding: 1rem;
 }
 
+.scrollable {
+    height: 50vh;
+}
+
+.history-scrollable {
+    height: 30vh;
+}
+
+
 #done-container, #delete-container {
     min-width: 50%;
-    /* max-height: 100%; */
-    /* background-color: antiquewhite; */
     padding: 1rem;
     border: 2px solid black;
 }
@@ -50,7 +58,6 @@ h2 {
 
 .history { 
     min-width: 50%;
-    margin: 0.5rem;
 }
 
 
@@ -87,6 +94,8 @@ button {
     width: 6rem;
     height: 2rem;
 }
+
+
 
 input {
     min-width:70vw;
