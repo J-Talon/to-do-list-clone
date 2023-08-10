@@ -1,8 +1,9 @@
 // Function waits for the DOM to fully load
 window.onload = function() {
 
-    const CREATEBTN = document.querySelector('#create-items');
-    const TASKDESCR = document.querySelector('#task-description');
+    const CREATE_BTN = document.querySelector('#create-items');
+    const TASK_DESCR = document.querySelector('#task-description');
+    const DIV = "div";
     var idCount = 1;
     
     // This event delegation is for the dynamically created "done" and "delete" buttons
@@ -10,74 +11,55 @@ window.onload = function() {
 
         var btnID = event.target.id;
 
-        if(btnID.startsWith('done_button-') || btnID.startsWith('delete_button-')) {
-            moveTask(btnID);
+        if (btnID == CREATE_BTN.id) {
+            createTask();
+            return;
         }
 
-        return;
-
+        if(btnID.startsWith('done_button-') || btnID.startsWith('delete_button-')) {
+            moveTask(btnID);
+            return;
+        }
     });
 
-    function moveTask(ID) {
-        /* Move tasks to either the #done-container or #delete-container */
-        
-        // Get the idCount of the associated element
-        var idDigit = ID.split("-").pop();
 
-        // Get the button id prefix
-        var idPrefix = ID.split("_").shift();
-        
-        const PARENTDIV = document.getElementById('div-' + idDigit);
-        const TASKTEXT = document.getElementById('child-' + idDigit).innerHTML;
-        const HISTORYCONTAINER = document.getElementById(idPrefix + '-container');
-
-        // Move task to #done-container or #delete-container
-        const newDiv = document.createElement('div');
-        newDiv.innerHTML = TASKTEXT;
-        newDiv.className = 'history'
-        HISTORYCONTAINER.appendChild(newDiv);        
-
-        // Remove the task from #list-container div
-        PARENTDIV.remove();
-    }
-
-        CREATEBTN.addEventListener('click', () => {
+       function createTask() {
         /* When #create-items button clicked, create a div element for the task and append inside #list-container */
     
         // Check that text box isn't empty
-        if(!TASKDESCR.value) {
+        if(!TASK_DESCR.value) {
             alert('Input task and description...');
             return;
         }
 
-        const PARENTDIV = document.createElement("div");          
-        const CHILDDIV = document.createElement("div");
+        const PARENT_DIV = document.createElement(DIV);          
+        const CHILD_DIV = document.createElement(DIV);
 
         // Define classnames and id for the newly created elements
-        PARENTDIV.className = "flex-hor";
-        CHILDDIV.className = "created-items"; 
-        PARENTDIV.id = 'div-' + idCount;
-        CHILDDIV.id = 'child-' + idCount;
+        PARENT_DIV.className = "flex-hor";
+        CHILD_DIV.className = "created-items"; 
+        PARENT_DIV.id = DIV + "-" + idCount;
+        CHILD_DIV.id = 'child-' + idCount;
 
         // Retreive text value from input element
-        CHILDDIV.innerHTML = TASKDESCR.value;
+        CHILD_DIV.innerHTML = TASK_DESCR.value;
 
         // Destructing/pattern matching 
         const [doneBtn, deleteBtn] = buttonMaker();
 
-        // Append all elements to the PARENTDIV element
-        PARENTDIV.append(CHILDDIV, doneBtn, deleteBtn);
+        // Append all elements to the PARENT_DIV element
+        PARENT_DIV.append(CHILD_DIV, doneBtn, deleteBtn);
 
-        // Append PARENTDIV element to the #list-container
-        document.getElementById("list-container").appendChild(PARENTDIV);
+        // Append PARENT_DIV element to the #list-container
+        document.getElementById("list-container").appendChild(PARENT_DIV);
 
         // Reset the text field of input element
-        TASKDESCR.value = '';
+        TASK_DESCR.value = '';
 
         idCount++;
 
         return;
-    });
+    }
 
     function buttonMaker() {
         /* Helper function to make done and delete buttons for each task item created */
@@ -92,6 +74,29 @@ window.onload = function() {
         delBtn.appendChild(document.createTextNode('Delete'));
 
         return [done, delBtn];
+    }
+
+    function moveTask(ID) {
+        /* Move tasks to either the #done-container or #delete-container */
+        
+        // Get the idCount of the associated element
+        var idDigit = ID.split("-").pop();
+
+        // Get the button id prefix
+        var idPrefix = ID.split("_").shift();
+        
+        const PARENT_DIV = document.getElementById(DIV + "-" + idDigit);
+        const TASK_TEXT = document.getElementById('child-' + idDigit).innerHTML;
+        const HISTORY_CONTAINER = document.getElementById(idPrefix + '-container');
+
+        // Move task to #done-container or #delete-container
+        const newDiv = document.createElement(DIV);
+        newDiv.innerHTML = TASK_TEXT;
+        newDiv.className = 'history'
+        HISTORY_CONTAINER.appendChild(newDiv);        
+
+        // Remove the task from #list-container div
+        PARENT_DIV.remove();
     }
 
 }
