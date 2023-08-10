@@ -5,47 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo List</title>
     <link rel="stylesheet" href="style.css">
+    
 
 </head>
 
 <body >
+    <script src="script.js"></script>
 
     <header>
         <h1>Todo list</h1>
 
-    <div class="flex-vert">
-        <div class="flex-hor" id="nav-button-container">
-            <button id="deleted-items">Deleted</button>
-            <button id="done-items">Done</button>
-            <button id="todo-items">Todo</button>
+        <div class="flex-vert">
+            <div class="flex-hor" id="nav-button-container">
+                <a href="" id="deleted-items"><button>Deleted</button></a>
+                <a id="done-items"><button>Done</button></a>
+                <a id="todo-items"><button>Todo</button></a>
+            </div>
+        
+            <div class="flex-hor">
+                <input id="task-description" placeholder="Enter task and description">
+                <button id="create-items">Create Task</button>
+            </div>
         </div>
-    
-        <div class="flex-hor">
-            <input placeholder="Enter task and description">
-            <button>Create Task</button>
-        </div>
-    </div>
-
 
     </header>
  
+    
     <!-- This is the container for the test item -->
-    <div class="flex-vert">
-        <div class="flex-hor">
-        <div id="test-item-desc">
-            <p>Task description goes here</p>
-        </div>
-
-        <div>
-            <button id="done-button">Done</button>
-            <button id="delete-button">Delete</button>
-        </div>
-        </div>
+    <div style="background-color: lightgreen;">
+        <h2>Tasks</h2>
+        <div id="list-container" class="flex-vert scrollable"></div>
     </div>
+    
+        
+    </div>
+
 
     <!-- Footer area for storing the done and deleted divs for testing
     Not sure about this so I'll let you take care of it. -->
-    <footer>
+    <footer >
+        
+        <div id="done-container" class="history-scrollable">
+            <h2>Completed Items</h2>
+        </div>
+
+        <div id="delete-container" class="history-scrollable">
+            <h2>Deleted Items</h2>
+        </div>
+
+
 
     </footer>
     
