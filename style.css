@@ -1,109 +1,320 @@
 * {
     margin: 0;
-    padding:0;
+    padding: 0;
     box-sizing: border-box;
 }
 
-body, html {
-    height: 100%;
+/* Varibles */
+:root {
+    --FONT-SIZE: 1.15rem;
+    --PADDING: 0.25rem;
+    --MARGIN: var(--PADDING);
+    --FONT-FAM: Arial, Helvetica, sans-serif;
+    --GAP: 0.5rem;
+    --SCROLL-MAX-HEIGHT: 960px;
+    --SCROLL-MIN-HEIGHT: 445px;
 }
 
-h1, h2 {    
-    font-weight: normal;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+html {
+    scroll-behavior: smooth;
 }
+
+/* This applies to the body */
+.grid-container {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr; 
+    font-family: var(--FONT-FAM);
+}
+
+/* flex, gap, align, justify, padd*/
+.flex-container, .task-list-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;    
+}
+
+
+.flex-container {
+    background-color: red;
+    flex-flow: column wrap;
+    align-items: center;
+    justify-content: center;
+
+    position: sticky;
+    top: 0;
+}
+
 
 h1 {
     font-size: 3rem;
 }
 
-h2 {
-    font-size: 1rem;
-    text-align: center;}
+.descr {
+    min-width: 80%;
+    background-color: lightgoldenrodyellow;
+    text-align: center;
+}
 
-#nav-button-container {
-    padding:0.5rem;
+span {
+    white-space: nowrap;
+}
+
+button, input {
+    font-size: 1.25rem;
+    padding: var(--PADDING);
+    margin: var(--MARGIN);
+}
+
+input {
+    width: 80%;    
+}
+
+button {
+    width: 100px;
+    text-align: center;
+    border-radius: 20px;
+}
+
+
+/* grid, gap, font-size, margin */
+.t2, .history {
+    display: grid;
+    gap: var(--GAP);
+    font-size: var(--FONT-SIZE);
+}
+
+.t2 {
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    margin: var(--GAP);    
+}
+
+.task-list-container {
+    background-color: green;
+    flex-direction: column;
+    gap: 1rem;
+    
 }
 
 .scrollable, .history-scrollable {
     overflow: hidden auto;
-    padding: 1rem;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    gap: var(--GAP);
+    padding: var(--GAP);
+    margin-bottom: 1rem;  
+    height: var(--SCROLL-MAX-HEIGHT);   
 }
 
 .scrollable {
-    height: 50vh;
+    background-color: yellow;
+         
+}
+
+.task-div {
+    background-color: lightsteelblue;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: start;
+    align-items: center;
+    gap: var(--GAP);
+    padding: var(--PADDING);
+}
+
+.task-btns {
+    display: flex;
+}
+
+.task-item {
+    background-color: lightcoral;
+    width: 100%;
+    border-radius: 20px;
+    padding: 0.75rem;
+}
+
+
+.history {
+    grid-template-rows: 1fr 1fr;
+}
+
+.history-done, .history-delete {
+    display: flex;   
+    flex-direction: column; 
+    align-items: center;
+    gap: 1rem;
+}
+
+
+.history-done {
+    background-color: lightskyblue;
+}
+
+.history-delete {
+    background-color: lightskyblue;
 }
 
 .history-scrollable {
-    height: 30vh;
+    background-color: yellow;
+    height: var(--SCROLL-MIN-HEIGHT);
 }
 
-
-#done-container, #delete-container {
-     min-width: 50%; 
-    padding: 1rem;
-    border: 2px solid black;
+/* These selectors below will be used for controlling the popup window properties */
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    padding: var(--PADDING);
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
-.created-items, .history { 
-    border-radius:16px;
-    background-color: lightcoral;
-    padding: 0.5rem 1rem;
-}
-
-.created-items { 
-    display: inline-block; 
-    min-width: 50vw;
-}
-
-.history { 
-    /* min-width: 50%; */
-}
-
-
-.flex-hor {
-    gap: 1rem;
-    display:flex;
-    align-items: center;
-}
-
-.flex-vert {
-    display:flex;
-    flex-direction:column;
-    align-items: center;
-    /* justify-content: center; */
-    gap:0.5rem;
-    padding-top:1rem;
+#modify-descr {
+    overflow: hidden auto;
+    height: 300px;    
 }
 
 
 
 
-/* Components */
 
-header {
-    padding:0rem 0rem 1rem 0rem;
-    background-color: lightblue;
-    border-color:black;
-    border-style:solid;
-    text-align: center;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* MEDIA QUERIES */
+
+/* XSmall */
+@media screen and (max-width: 576px) and (max-width: 992px){
+    body {
+        background-color: lightgreen;
+    }
+
+    .descr {
+        width: 100%;
+        text-align: center;
+    }
+
+    input {
+        width: 60%;    
+    }
+
+    button, input {
+        font-size: 1rem;
+        padding: var(--PADDING);
+        margin: var(--MARGIN);
+    }
+
+    button {
+        width: 80px;
+        text-align: center;
+        border-radius: 20px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .t2, .history {
+        font-size: 1rem;
+    }
+
+    .t2 {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .scrollable {
+        height: var(--SCROLL-MIN-HEIGHT);        
+    }
+
+    .task-div {
+        background-color: lightsteelblue;
+        flex-wrap: wrap;
+        width: 100%;
+    }
 }
 
-button {
-    border-radius: 16px;
-    width: 6rem;
-    height: 2rem;
+/* Small */
+@media screen and (min-width: 576px){
+    body {
+        background-color: pink;
+    }
+
+    .scrollable {
+        height: var(--SCROLL-MIN-HEIGHT);        
+    }
+}
+
+/* Medium */
+@media screen and (min-width: 768px) {
+    body {
+        background-color: gold;
+    }
+
+    /* Some issue with resizing in this width!!! */
+    /* .scrollable {
+        height: var(--SCROLL-MAX-HEIGHT);        
+    } */
+    
 }
 
 
 
-input {
-    min-width:70vw;
-    padding: 0.25rem;
+/* Large */
+@media screen and (min-width: 992px){
+    body {
+        background-color: firebrick;
+    }
+
+    nav {
+        display: none;
+    }
+
+    .flex-container {
+        background-color: red;    
+        position: relative;
+    }
+    
+    .scrollable {
+        height: var(--SCROLL-MAX-HEIGHT);        
+    }
 }
 
-footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* XL */
+@media screen and (min-width: 1200px){
+    body {
+        background-color: rebeccapurple;
+    }
+
+    nav {
+        display: none;
+    }
+
+    .flex-container {
+        background-color: red;    
+        position: relative;
+    }
+
+    .scrollable {
+        height: var(--SCROLL-MAX-HEIGHT);        
+    }
 }

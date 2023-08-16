@@ -2,65 +2,76 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="author" content="Mohit Verma and Talon Jiang">
+    <meta name="keywords" content="HTML, CSS, JavaScript, Todo List">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo List</title>
     <link rel="stylesheet" href="style.css">
-    
-
 </head>
 
-<body >
+<body class="grid-container">
+
     <script src="script.js"></script>
 
-    <header>
-        <h1>Todo list</h1>
 
-        <div class="flex-vert">
-            <div class="flex-hor" id="nav-button-container">
-                <a href="" id="deleted-items"><button>Deleted</button></a>
-                <a id="done-items"><button>Done</button></a>
-                <a id="todo-items"><button>Todo</button></a>
+        <header class="flex-container">
+            
+            <h1>ToDo List</h1>
+
+            <nav>
+                <a href="#task-list"><button>Tasks</button></a>
+                <a href="#history-done-list"><button>Done</button></a>
+                <a href="#history-delete-list"><button>Deleted</button></a>
+            </nav>                      
+
+        </header>
+
+        <div class="descr">
+            <span>
+                <input type="text" id="task-description" placeholder="Enter task...">
+                <button id="add-item">Add</button>
+            </span>
+        </div>
+
+        <div class="t2">
+
+            <div id="popup-task-list" class="popup">
+                <p style="font-weight: bold;">Task Description:</p>
+                <br>
+                <p id="modify-descr">Hi</p>
+                <br>
+                <button id="popup-done">Done</button>
+                <button id="popup-delete">Delete</button>
+                <button id="popup-close">Close</button>
             </div>
-        
-            <div class="flex-hor">
-                <input id="task-description" placeholder="Enter task and description">
-                <button id="create-items">Create Task</button>
+
+            <div class="task-list-container">
+                <h2>Task List</h2>
+                <div id="task-list" class="scrollable"></div>
+            </div>
+
+            <div id="popup-history-list" class="popup">
+                <p style="font-weight: bold;">Task Description:</p>
+                <br>
+                <p id="modify-descr">Hi</p>
+                <br>
+                <button id="popup-restore">Restore</button>
+                <button id="popup-close">Close</button>
+            </div>
+            
+            <div class="history">                
+                <div class="history-done">
+                    <h2>Done List</h2>
+                    <div id="history-done-list" class="history-scrollable"></div>
+                </div>
+
+                <div class="history-delete">
+                    <h2>Delete List</h2>
+                    <div id="history-delete-list" class="history-scrollable"></div>
+                </div>                
             </div>
         </div>
 
-    </header>
- 
-    
-    <!-- This is the container for the test item -->
-    <div style="background-color: lightgreen;">
-        <h2>Tasks</h2>
-        <div id="list-container" class="flex-vert scrollable"></div>
-    </div>
-    
-        
-    </div>
-
-
-    <!-- Footer area for storing the done and deleted divs for testing
-    Not sure about this so I'll let you take care of it. -->
-    <footer >
-        
-        <div id="done-container" class="history-scrollable">
-            <h2>Completed Items</h2>
-        </div>
-
-        <div id="delete-container" class="history-scrollable">
-            <h2>Deleted Items</h2>
-        </div>
-
-
-
-    </footer>
-    
 
 </body>
-
-
-
-
 </html>
