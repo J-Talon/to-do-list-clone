@@ -1,0 +1,264 @@
+
+
+//access the webpage with the url: http://127.0.0.1/Todo.html
+//ensure that you have the sql server set up first.
+/*
+MySQL server config:
+
+1 DB called todo
+3 tables: 
+  tasks, deleted, done
+
+  table tasks:
+    id: int, auto increment, primary key
+    text: mediumtext
+
+  table deleted:
+    id: int, primary key
+    text: mediumtext
+
+  table done:
+  id: int, primary key
+  text: mediumtext
+
+User1 permissions for each table:
+  insert, select, delete
+
+*/
+
+
+var cors = require('cors');
+var mysql = require("mysql");
+var express = require("express");
+var parser = require("body-parser");  //we need body parser to parse the Json from the DB since we're using ExpressJS
+var app = express();
+
+const TABLES = new Set(["tasks", "done", "deleted"]);
+
+const ACTION = "action";
+const ID_HEADER = "id";
+const CONTENT_HEADER = "content";
+const REM_TABLE = "old_table";
+const ADD_TABLE = "new_table";
+
+const TABLE = "table";
+
+const ACTION_MOVE = "move";
+const ACTION_NEW = "new";
+const ACTION_LOAD = "load";
+
+  //In production the password etc would be put sometwhere else for security
+const CREDENTIALS = {
+  host: "localhost",
+  user: "user1",
+  password: "userpass1"
+};
+
+
+//Don't use this in production.
+app.use(cors(
+    {
+     origin: 'http://127.0.0.1'
+   }
+  ));
+  
+  
+  app.use(express.static('./'));
+  app.use(parser.json()); 
+
+  
+
+app.listen(80);  //same reason we're using cors
+console.log("Backend server started");
+
+
+//we're using 3 gate endpoints here: new, move, and load for info retrieval and sending
+//think of these as event listeners which are called by a caller (res) and a request with data (req)
+app.post("/dev/new", async function(req, res) {
+
+
+  let content = req.body;  //this returns a dict of data on what to do.
+                            //see script.js line 97 for an example of the data in the dict
+  let action = content[ACTION];
+
+  if (action !== ACTION_NEW)
+      return;
+
+  let text = content[CONTENT_HEADER];
+  await addTask(res, text);
+
+  }
+);
+
+//same as above but listening for a request to move from 1 DB to another.
+app.post("/dev/move", async function(req, res) {
+   let content = req.body;
+   let action = content[ACTION];
+
+   if (action !== ACTION_MOVE)
+      return;
+
+
+    let oldTable = content[REM_TABLE];
+    let newTable = content[ADD_TABLE];
+    let elemId = content[ID_HEADER];
+
+    await moveTask(elemId, oldTable, newTable, res);
+
+
+  }
+);
+
+app.post("/dev/load", async function(req, res) {
+  
+   let content = req.body;
+  let action = content[ACTION];
+
+  if (action !== ACTION_LOAD) {
+    return;
+  }
+
+  let table = content[TABLE];
+  await getEntries(res, table);
+  }
+);
+
+
+///////////////////////
+//executes sql and returns the results. Bypasses the need to continually go deeper in scope with lambdas.
+//achieves this by using a promise which is resolved into a result. 
+//the resolve() method returns the results so that they are accessible.
+var executor = async function(query, sql) {
+
+  return new Promise((resolve, reject) => {
+
+    sql.query(query, (error, results) => {
+      if (error)
+      reject(error);
+    else
+      resolve(results);
+
+    });
+
+  });
+}
+
+////////////////////////////
+
+
+//This function returns all of the entries in the table. 
+//Used for when the user first loads onto the website.
+async function getEntries(recipient, table) {
+
+  //check if tables specified are valid (if they're expected to exist in the DB)
+  if (!TABLES.has(table)) {
+    return;
+  }
+
+  let sqlConnection = mysql.createConnection(CREDENTIALS);
+  sqlConnection.query("USE todo"); //select the DB
+  let query = await executor("SELECT * FROM "+table, sqlConnection); //select entries
+  let dict = {};
+
+  //turning the results into a dictionary for easy use when they're received on the client side
+  for (let i = 0 ; i < query.length; i ++) {
+    dict[query[i]["id"]] = query[i]["text"];
+  }
+
+  let res = JSON.stringify(dict);
+  recipient.send(res);
+  sqlConnection.end();
+  
+  
+}
+
+//adds an entry to the tasks table
+async function addTask(recipient, content) {
+
+
+  //id callback is a callback to return the id of the element appended to the DB to the client to create an HTML element
+  let idCallback = function(err, results, fields) {
+    
+    if (err) {
+      console.log(err);
+      recipient.send(undefined);
+      return;
+    }
+
+    try {
+      let id = results[0]["last_insert_id()"];  //getting the id
+      recipient.send(id.toString()); //id is an int so we're changing it to a string. (otherwise we need recipient.sendStatus() instead)
+    }
+    catch (exception) {
+      console.log(exception);
+      recipient.send(undefined);
+    }
+  };
+
+  let sqlConnection = mysql.createConnection(CREDENTIALS);
+
+  sqlConnection.connect();
+  sqlConnection.query("USE todo");
+  sqlConnection.query("INSERT INTO tasks (text) VALUES (\""+content+"\");"); //insert the text into the DB. ID is autogenerated.
+  sqlConnection.query("SELECT last_insert_id();", idCallback);//get the id of the item inserted, call idCallback
+  sqlConnection.end();
+}
+
+
+
+
+
+async function moveTask(id, oldTable, newTable, recipient) {
+
+
+  //check if tables specified are valid (if they're expected to exist in the DB)
+  if (!(TABLES.has(oldTable) && TABLES.has(newTable))) {
+      return;
+    }
+
+
+  let text = undefined;
+  let issue = false;
+
+  //if there's an error then it will be logged by this callback
+  let statusCallback = function(err, results, fields) {
+       console.log(err);
+  }
+
+  let sqlConnection = mysql.createConnection(CREDENTIALS);
+  sqlConnection.connect();
+  sqlConnection.query("USE todo");
+
+  //selecting all entries where the id is the id specified. We the take the first element and get the text field
+  // only the first element is needed since all ids should be unique. 
+  text = (await executor("SELECT * FROM "+oldTable+" WHERE id="+id+";", sqlConnection))[0]["text"];
+
+
+  //checking if the text is undefined or if an issue occured.
+  //We don't actually do anything with he status callback yet.
+  if (text == undefined || issue) {
+    sqlConnection.end();
+    recipient.send("false");
+    return;
+  }
+
+  //deleting the entry from the old table
+  sqlConnection.query("DELETE FROM "+oldTable+" WHERE id="+id+";", statusCallback);
+
+  if (issue) {
+    sqlConnection.end();
+    recipient.send("false");
+    return;
+  }
+  
+  //inserting the entry into the new table.
+  sqlConnection.query("INSERT INTO "+ newTable+"(id, text) VALUES ("+id+",\""+text+"\");", statusCallback);
+  if (issue) {
+    sqlConnection.end();
+    recipient.send("false");
+    return;
+  }
+
+  recipient.send("true");
+  sqlConnection.end();
+}
