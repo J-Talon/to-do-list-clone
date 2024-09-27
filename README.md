@@ -1,3 +1,8 @@
-This is a clone of https://github.com/VerMohit/to-do-list for my own reference,
-which is a fullstack project with a front-end website and a back-end mySQL database.
+This is a fullstack project which me and a fellow developer worked on together during the summer of 2023.
+The project uses Node, ExpressJS, and MySQL for backend integration, with HTMl and CSS for the front-end website.
+
+You can find the original project here: https://github.com/VerMohit/to-do-list
+
+
+
 
